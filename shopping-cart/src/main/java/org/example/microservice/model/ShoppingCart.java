@@ -24,4 +24,6 @@ public class ShoppingCart {
 
     boolean isCheckout = false;
 
+    private BigDecimal totalAmount;
+
 }

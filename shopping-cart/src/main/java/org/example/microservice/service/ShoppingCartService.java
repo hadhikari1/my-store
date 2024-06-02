@@ -80,7 +80,9 @@ public class ShoppingCartService {
                 if(updatedProduct == null){
                     break;
                 }
+                BigDecimal getTotalAmount = updatedProduct.getRetailPrice().multiply(new BigDecimal(shoppingCart.getQuantity()));
                 shoppingCart.setCheckout(true);
+                shoppingCart.setTotalAmount(getTotalAmount);
                 shoppingCartRepository.save(shoppingCart);
                 products.add(updatedProduct);
             }
