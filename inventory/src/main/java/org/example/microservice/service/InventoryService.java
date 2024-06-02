@@ -10,36 +10,36 @@ import org.springframework.stereotype.Service;
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
 
-    public Product addProduct(Product product){
-        try{
-//            look up product by upc
+    public Product addProduct(Product product) {
+        try {
+            // look up product by upc
             Product existingProduct = getProductByUpc(product.getUpc());
-//            if product exist update the product
-//            else save product
-            if(existingProduct != null){
+            // if product exist update the product
+            // else save product
+            if (existingProduct != null) {
                 return updateProduct(existingProduct.getId(), product);
-            }else{
+            } else {
                 return inventoryRepository.save(product);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
 
-    public Product getProductByUpc(String upc){
-        try{
+    public Product getProductByUpc(String upc) {
+        try {
             return inventoryRepository.findProductByUpc(upc);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
 
-    public Product updateProduct(Long id, Product product){
-        try{
+    public Product updateProduct(Long id, Product product) {
+        try {
             Product existingProduct = inventoryRepository.findProductById(id);
-            if(existingProduct != null ){
+            if (existingProduct != null) {
                 existingProduct.setName(product.getName());
                 existingProduct.setUpc(product.getUpc());
                 existingProduct.setWholesalePrice(product.getWholesalePrice());
@@ -47,7 +47,7 @@ public class InventoryService {
                 existingProduct.setQuantity(product.getQuantity());
                 return inventoryRepository.save(existingProduct);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;

@@ -18,76 +18,76 @@ public class ShoppingCartService {
     private final InventoryRepository inventoryRepository;
     private final ShoppingCartRepository shoppingCartRepository;
 
-    public ShoppingCart addToCart(ShoppingCartDto shoppingCartDto){
-       try{
-           Product product = inventoryRepository.findProductById(shoppingCartDto.getProductId());
-           if(product != null && addItems(shoppingCartDto.getPurchaseQuantity(), product.getQuantity())){
-               ShoppingCart shoppingCart = shoppingCartRepository.getById(shoppingCartDto.getShoppingCartId());
-               if(shoppingCart != null && shoppingCartDto.getShoppingCartId() > 0l && !shoppingCart.isCheckout()){
-                   shoppingCart.setQuantity(shoppingCartDto.getPurchaseQuantity());
-                   return shoppingCartRepository.save(shoppingCart);
-               }
-               ShoppingCart newShoppingCart = ShoppingCart
-                       .builder()
-                       .product(product)
-                       .quantity(shoppingCartDto.getPurchaseQuantity())
-                       .isCheckout(false)
-                       .build();
-               return shoppingCartRepository.save(newShoppingCart);
-           }
-       }catch(Exception e){
-           System.out.println(e.getMessage());
-       }
+    public ShoppingCart addToCart(ShoppingCartDto shoppingCartDto) {
+        try {
+            Product product = inventoryRepository.findProductById(shoppingCartDto.getProductId());
+            if (product != null && addItems(shoppingCartDto.getPurchaseQuantity(), product.getQuantity())) {
+                ShoppingCart shoppingCart = shoppingCartRepository.getById(shoppingCartDto.getShoppingCartId());
+                if (shoppingCart != null && shoppingCartDto.getShoppingCartId() > 0l && !shoppingCart.isCheckout()) {
+                    shoppingCart.setQuantity(shoppingCartDto.getPurchaseQuantity());
+                    return shoppingCartRepository.save(shoppingCart);
+                }
+                ShoppingCart newShoppingCart = ShoppingCart
+                        .builder()
+                        .product(product)
+                        .quantity(shoppingCartDto.getPurchaseQuantity())
+                        .isCheckout(false)
+                        .build();
+                return shoppingCartRepository.save(newShoppingCart);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
-    public boolean addItems(int purchaseQuantity, int productQuantity){
-        if(purchaseQuantity > productQuantity){
+
+    public boolean addItems(int purchaseQuantity, int productQuantity) {
+        if (purchaseQuantity > productQuantity) {
             return false;
         }
         return true;
     }
 
-
-
-    public BigDecimal getTotal(List<Long> shoppingCartIds){
+    public BigDecimal getTotal(List<Long> shoppingCartIds) {
         BigDecimal total = BigDecimal.ZERO;
-        try{
-            for(Long id: shoppingCartIds){
+        try {
+            for (Long id : shoppingCartIds) {
                 ShoppingCart shoppingCart = shoppingCartRepository.getById(id);
-                if(shoppingCart != null && !shoppingCart.isCheckout()){
+                if (shoppingCart != null && !shoppingCart.isCheckout()) {
                     Product product = shoppingCart.getProduct();
                     total = product.getRetailPrice().multiply(new BigDecimal(shoppingCart.getQuantity()));
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return total;
     }
 
-    public List<Product> checkout(List<Long> shoppingCartIds){
-        try{
+    public List<Product> checkout(List<Long> shoppingCartIds) {
+        try {
             List<Product> products = new ArrayList<>();
-            for(Long id: shoppingCartIds){
+            for (Long id : shoppingCartIds) {
                 ShoppingCart shoppingCart = shoppingCartRepository.getById(id);
-                if(shoppingCart == null){
+                if (shoppingCart == null) {
                     break;
                 }
                 Product product = shoppingCart.getProduct();
                 int remainingQuantity = product.getQuantity() - shoppingCart.getQuantity();
                 product.setQuantity(remainingQuantity);
                 Product updatedProduct = inventoryRepository.save(product);
-                if(updatedProduct == null){
+                if (updatedProduct == null) {
                     break;
                 }
-                BigDecimal getTotalAmount = updatedProduct.getRetailPrice().multiply(new BigDecimal(shoppingCart.getQuantity()));
+                BigDecimal getTotalAmount = updatedProduct.getRetailPrice()
+                        .multiply(new BigDecimal(shoppingCart.getQuantity()));
                 shoppingCart.setCheckout(true);
                 shoppingCart.setTotalAmount(getTotalAmount);
                 shoppingCartRepository.save(shoppingCart);
                 products.add(updatedProduct);
             }
             return products;
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
