@@ -1,7 +1,13 @@
 package org.example.microservice;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+@SpringBootApplication
+@EnableDiscoveryClient
 public class ApiGatewayApplication {
     public static void main(String[] args) {
-        // TODO: Need to add API gateway so it can have one endpoint
+        SpringApplication.run(ApiGatewayApplication.class,args);
     }
 }

@@ -20,6 +20,7 @@
         <module>shopping-cart</module>
         <module>inventory</module>
         <module>api-gateway</module>
+        <module>discovery-server</module>
     </modules>
 
     <properties>
