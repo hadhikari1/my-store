@@ -17,7 +17,6 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/shopping-cart")
-@CrossOrigin("localhost:3000")
 public class ShoppingCartController {
     @Autowired
     private final ShoppingCartService shoppingCartService;

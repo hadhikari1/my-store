@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/inventory")
-@CrossOrigin("http://localhost:3000/")
 public class InventoryController {
     @Autowired
     private final InventoryService inventoryService;
