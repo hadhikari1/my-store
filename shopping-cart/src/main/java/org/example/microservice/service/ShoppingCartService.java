@@ -72,6 +72,10 @@ public class ShoppingCartService {
         return shoppingCartRepository.save(newShoppingCart);
     }
 
+    public List<ShoppingCart> getAllNonCheckedOutItems(){
+        return shoppingCartRepository.findByIsCheckoutFalse();
+    }
+
     /**
      * Checks if the purchase quantity is less than or equal to the available product quantity.
      *

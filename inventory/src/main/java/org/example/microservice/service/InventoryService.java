@@ -7,6 +7,7 @@ import org.example.microservice.model.Product;
 import org.example.microservice.repository.InventoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -75,12 +76,20 @@ public class InventoryService {
                     log.error("Product with ID: {} not found", id);
                     return new ProductNotFoundException("Product with ID " + id + " not found");
                 });
+        String name = product.getName() != null ? product.getName() : existingProduct.getName();
+        String upc = product.getUpc() != null ? product.getUpc() : existingProduct.getUpc();
+        BigDecimal wholesalePrice = product.getWholesalePrice() != null ? product.getWholesalePrice()
+                : existingProduct.getWholesalePrice();
+        BigDecimal retailPrice = product.getRetailPrice() != null ? product.getRetailPrice()
+                : existingProduct.getRetailPrice();
+        int quantity = product.getQuantity() > 0 ? product.getQuantity()
+                : existingProduct.getQuantity();
 
-        existingProduct.setName(product.getName());
-        existingProduct.setUpc(product.getUpc());
-        existingProduct.setWholesalePrice(product.getWholesalePrice());
-        existingProduct.setRetailPrice(product.getRetailPrice());
-        existingProduct.setQuantity(product.getQuantity());
+        existingProduct.setName(name);
+        existingProduct.setUpc(upc);
+        existingProduct.setWholesalePrice(wholesalePrice);
+        existingProduct.setRetailPrice(retailPrice);
+        existingProduct.setQuantity(quantity);
         log.info("Product with ID: {} updated successfully", id);
         return inventoryRepository.save(existingProduct);
     }

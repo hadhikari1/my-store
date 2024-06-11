@@ -45,4 +45,10 @@ public class ShoppingCartController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/all-items")
+    public ResponseEntity<List<ShoppingCart>> getAllNonCheckedOutItems() {
+        List<ShoppingCart> allItems = shoppingCartService.getAllNonCheckedOutItems();
+        return ResponseEntity.ok(allItems);
+    }
 }
