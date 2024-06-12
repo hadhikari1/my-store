@@ -26,4 +26,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGenericException(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(AlreadyCheckedOutException.class)
+    public ResponseEntity<String> handleAlreadyCheckedOutException(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FOUND);
+    }
 }

@@ -3,6 +3,7 @@ package org.example.microservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.microservice.dto.ShoppingCartDto;
+import org.example.microservice.exception.AlreadyCheckedOutException;
 import org.example.microservice.exception.InsufficientQuantityException;
 import org.example.microservice.exception.ProductNotFoundException;
 import org.example.microservice.exception.ShoppingCartNotFoundException;
@@ -41,7 +42,8 @@ public class ShoppingCartService {
                 });
 
         if (!addItems(shoppingCartDto.getPurchaseQuantity(), product.getQuantity())) {
-            log.error("Insufficient quantity for product: {}. Requested: {}, Available: {}", product.getName(), shoppingCartDto.getPurchaseQuantity(), product.getQuantity());
+            log.error("Insufficient quantity for product: {}. Requested: {}, Available: {}", product.getName(),
+                    shoppingCartDto.getPurchaseQuantity(), product.getQuantity());
             throw new InsufficientQuantityException("Insufficient quantity for product: " + product.getName());
         }
 
@@ -58,6 +60,8 @@ public class ShoppingCartService {
                 shoppingCart.setTotalAmount(total);
                 shoppingCart.setQuantity(shoppingCartDto.getPurchaseQuantity());
                 return shoppingCartRepository.save(shoppingCart);
+            }else {
+                throw new AlreadyCheckedOutException("Failed to add to cart, this item is already checked out.");
             }
         }
 
