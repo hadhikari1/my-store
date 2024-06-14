@@ -55,7 +55,7 @@ public class ShoppingCartService {
                         log.error("Shopping cart with ID {} not found", shoppingCartDto.getShoppingCartId());
                         return new ShoppingCartNotFoundException("Shopping cart not found");
                     });
-            if (!shoppingCart.isCheckout()) {
+            if (!shoppingCart.isCheckout() && shoppingCart.getQuantity() > 0) {
                 log.info("Updating quantity for shopping cart with ID {}", shoppingCartDto.getShoppingCartId());
                 shoppingCart.setTotalAmount(total);
                 shoppingCart.setQuantity(shoppingCartDto.getPurchaseQuantity());
@@ -77,7 +77,7 @@ public class ShoppingCartService {
     }
 
     public List<ShoppingCart> getAllNonCheckedOutItems(){
-        return shoppingCartRepository.findByIsCheckoutFalse();
+        return shoppingCartRepository.findByIsCheckoutFalseAndQuantityGreaterThan(0);
     }
 
     /**
